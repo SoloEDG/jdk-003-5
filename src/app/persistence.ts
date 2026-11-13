@@ -3,16 +3,18 @@ import { exportBattle, restoreBattle } from "@/features/battle";
 import { exportDeck, restoreDeck } from "@/features/deck";
 import { exportReward, restoreReward } from "@/features/reward";
 import { exportShop, restoreShop } from "@/features/shop";
+import { exportParty, restoreParty } from "@/features/party";
 import { exportSession, restoreSession } from "./session";
-const KEY = "ember-path-v1";
+const KEY = "ember-path-v2";
 function snapshot() {
   return {
-    version: 1,
+    version: 2,
     route: exportRoute(),
     battle: exportBattle(),
     deck: exportDeck(),
     reward: exportReward(),
     shop: exportShop(),
+    party: exportParty(),
     session: exportSession(),
   };
 }
@@ -30,7 +32,7 @@ export function load() {
   try {
     const d = JSON.parse(raw);
     if (
-      d.version !== 1 ||
+      d.version !== 2 ||
       !Array.isArray(d.deck?.cards) ||
       !Array.isArray(d.route?.visited) ||
       !d.battle?.piles ||
@@ -46,6 +48,7 @@ export function load() {
       restoreDeck(d.deck);
       restoreReward(d.reward);
       restoreShop(d.shop);
+      restoreParty(d.party ?? { roster: [], pendingGrowth: [], pendingSupplies: [], dismissed: [] });
       restoreSession(d.session);
     } catch {
       restoreRoute(old.route);
@@ -53,6 +56,7 @@ export function load() {
       restoreDeck(old.deck);
       restoreReward(old.reward);
       restoreShop(old.shop);
+      restoreParty(old.party);
       restoreSession(old.session);
       return false;
     }

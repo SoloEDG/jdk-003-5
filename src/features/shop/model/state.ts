@@ -2,6 +2,7 @@ import { reactive, readonly } from "vue";
 import type { JourneyContext, Purchase } from "@/shared/domain";
 import { makeStock, type StockItem } from "../lib/stock";
 import { priceFor } from "../lib/pricing";
+import { makeSupply, isActiveCompanion } from "@/features/party";
 const state = reactive({
   context: null as JourneyContext | null,
   stock: [] as StockItem[],
@@ -9,6 +10,15 @@ const state = reactive({
   open: false,
 });
 export const shopState = readonly(state);
+export interface PurchaseOrder {
+  item: StockItem;
+  price: number;
+}
+export interface PurchaseResult {
+  card: string | null;
+  ownerId?: string;
+  supply: ReturnType<typeof makeSupply> | null;
+}
 export function openShop(c: JourneyContext) {
   if (state.context?.nodeId !== c.nodeId) {
     state.context = c;
@@ -22,17 +32,31 @@ export function itemPrice(id: string) {
     ? priceFor(item.basePrice, state.context.influence)
     : Infinity;
 }
-export function preparePurchase(id: string): Purchase | null {
+export function preparePurchase(id: string): PurchaseOrder | null {
   const item = state.stock.find((s) => s.id === id);
   if (!state.open || !item || item.sold) return null;
-  return { id: item.id, card: item.card, price: itemPrice(id) };
+  // 已离队同伴的补给/专属牌不再出售
+  if (item.companionId && !isActiveCompanion(item.companionId)) return null;
+  return { item, price: itemPrice(id) };
 }
-export function completePurchase(p: Purchase) {
-  const item = state.stock.find((s) => s.id === p.id);
-  if (!item || item.sold) return false;
+export function completePurchase(order: PurchaseOrder): PurchaseResult | null {
+  const item = state.stock.find((s) => s.id === order.item.id);
+  if (!item || item.sold) return null;
   item.sold = true;
-  state.purchases.push(p);
-  return true;
+  if (item.kind === "supply" && item.supply && item.companionId) {
+    // 补给已付费但先放入待领取，离队时按原价退款
+    return {
+      supply: makeSupply(item.supply, item.companionId, order.price),
+      card: null,
+    };
+  }
+  const purchase: Purchase = {
+    id: item.id,
+    card: item.card!,
+    price: order.price,
+  };
+  state.purchases.push(purchase);
+  return { supply: null, card: item.card!, ownerId: item.companionId };
 }
 export function closeShop() {
   state.open = false;

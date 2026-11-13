@@ -75,6 +75,80 @@ export const cards: Record<string, CardSpec> = {
       { type: "heal", amount: 3, target: "hero" },
     ],
   },
+  // —— 同伴「流明（lumen）」专属牌 ——
+  lumenJolt: {
+    key: "lumenJolt",
+    name: "流明·火花",
+    cost: 1,
+    kind: "attack",
+    text: "由流明造成 6 伤害，施加 2 中毒。",
+    rarity: "common",
+    companionId: "lumen",
+    effects: [
+      { type: "damage", amount: 6, target: "enemy" },
+      { type: "poison", amount: 2, target: "enemy" },
+    ],
+  },
+  lumenWard: {
+    key: "lumenWard",
+    name: "流明·静电护罩",
+    cost: 1,
+    kind: "skill",
+    text: "流明获得 8 格挡。",
+    rarity: "common",
+    companionId: "lumen",
+    effects: [{ type: "block", amount: 8, target: "hero" }],
+  },
+  lumenSurge: {
+    key: "lumenSurge",
+    name: "流明·过载脉冲",
+    cost: 2,
+    kind: "attack",
+    text: "由流明造成 12 伤害，施加 5 中毒。",
+    rarity: "rare",
+    companionId: "lumen",
+    effects: [
+      { type: "damage", amount: 12, target: "enemy" },
+      { type: "poison", amount: 5, target: "enemy" },
+    ],
+  },
+  // —— 同伴「拉娜（rana）」专属牌 ——
+  ranaHack: {
+    key: "ranaHack",
+    name: "拉娜·裂甲斧",
+    cost: 1,
+    kind: "attack",
+    text: "由拉娜造成 9 伤害。力量加成。",
+    rarity: "common",
+    companionId: "rana",
+    effects: [{ type: "damage", amount: 9, target: "enemy" }],
+  },
+  ranaBellow: {
+    key: "ranaBellow",
+    name: "拉娜·战吼",
+    cost: 0,
+    kind: "skill",
+    text: "拉娜本场力量 +2，获得 1 能量。",
+    rarity: "rare",
+    companionId: "rana",
+    effects: [
+      { type: "strength", amount: 2, target: "hero" },
+      { type: "energy", amount: 1, target: "hero" },
+    ],
+  },
+  ranaCleave: {
+    key: "ranaCleave",
+    name: "拉娜·横扫",
+    cost: 2,
+    kind: "attack",
+    text: "由拉娜造成 14 伤害，获得 6 格挡。力量加成。",
+    rarity: "rare",
+    companionId: "rana",
+    effects: [
+      { type: "damage", amount: 14, target: "enemy" },
+      { type: "block", amount: 6, target: "hero" },
+    ],
+  },
 };
 export function cardLabel(key: string) {
   return cards[key]?.name ?? key;

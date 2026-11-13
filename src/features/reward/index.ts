@@ -7,3 +7,4 @@ export {
   restoreReward,
   resetReward,
 } from "./model/state";
+export { openCompanionGrowth } from "./lib/settlement";

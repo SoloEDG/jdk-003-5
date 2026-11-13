@@ -5,7 +5,11 @@ export {
   playCard,
   endTurn,
   currentIntent,
+  currentTarget,
+  heroActor,
+  allyActors,
   exportBattle,
   restoreBattle,
   resetBattle,
+  type PartyInit,
 } from "./model/state";

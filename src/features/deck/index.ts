@@ -2,7 +2,10 @@ export { default as DeckPanel } from "./ui/DeckPanel.vue";
 export {
   deckState,
   deckCards,
+  battleDeck,
   addCard,
+  removeCardsByOwner,
+  upgradeOwnedCards,
   spendGold,
   earnGold,
   setHp,

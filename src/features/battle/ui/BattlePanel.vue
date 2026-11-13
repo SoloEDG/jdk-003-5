@@ -1,8 +1,18 @@
 <script setup lang="ts">
-import { battleState, currentIntent } from "../model/state";
+import {
+  battleState,
+  currentIntent,
+  currentTarget,
+  heroActor,
+  allyActors,
+} from "../model/state";
 import { cards } from "@/shared/cards";
+import { companionName } from "@/features/party";
 import ActorCard from "./ActorCard.vue";
 defineEmits<{ play: [id: string]; end: []; settle: [] }>();
+function ownerLabel(ownerId: string) {
+  return ownerId === "hero" ? "余烬旅人" : companionName(ownerId);
+}
 </script>
 <template>
   <section class="panel battle-panel">
@@ -12,7 +22,21 @@ defineEmits<{ play: [id: string]; end: []; settle: [] }>();
     </div>
     <h2>{{ battleState.enemy?.name ?? "等待下一场遭遇" }}</h2>
     <div v-if="battleState.enemy" class="arena">
-      <ActorCard :actor="battleState.hero" name="余烬旅人" />
+      <div class="party-side">
+        <ActorCard
+          v-if="heroActor()"
+          :actor="heroActor()!"
+          name="余烬旅人"
+          :targeted="currentTarget()?.id === 'hero'"
+        />
+        <ActorCard
+          v-for="ally in allyActors()"
+          :key="ally.id"
+          :actor="ally"
+          :name="ally.name"
+          :targeted="currentTarget()?.id === ally.id"
+        />
+      </div>
       <div class="versus">
         VS<br /><small>{{ battleState.context?.region.toUpperCase() }}</small>
       </div>
@@ -25,13 +49,14 @@ defineEmits<{ play: [id: string]; end: []; settle: [] }>();
     </div>
     <div v-else class="empty-art">
       ✧
-      <p>在路线图中选择一个哨站<br /><small>每次出牌都可能改变战局</small></p>
+      <p>在路线图中选择一个哨站<br /><small>全队共用能量，生命各自独立</small></p>
     </div>
     <div v-if="battleState.phase === 'playing'">
       <div class="energy-line">
-        <b>◉ {{ battleState.energy }} / 3 能量</b
+        <b>◉ {{ battleState.energy }} / 3 能量（全队共用）</b
         ><span
-          >抽牌 {{ battleState.piles.draw.length }} · 弃牌
+          >目标 {{ currentTarget()?.name ?? "—" }} · 抽牌
+          {{ battleState.piles.draw.length }} · 弃牌
           {{ battleState.piles.discard.length }} · 消耗
           {{ battleState.piles.exhaust.length }}</span
         ><button data-action="end-turn" @click="$emit('end')">
@@ -44,6 +69,7 @@ defineEmits<{ play: [id: string]; end: []; settle: [] }>();
           :key="c.id"
           class="playing-card"
           :data-hand-id="c.id"
+          :data-owner="c.ownerId"
           :disabled="cards[c.key]!.cost > battleState.energy"
           @click="$emit('play', c.id)"
         >
@@ -57,7 +83,7 @@ defineEmits<{ play: [id: string]; end: []; settle: [] }>();
           }}</span>
           <h3>{{ cards[c.key]!.name }}{{ c.upgraded ? " +" : "" }}</h3>
           <p>{{ cards[c.key]!.text }}<b v-if="c.upgraded"> 效果 +2</b></p>
-          <small>{{ cards[c.key]!.kind.toUpperCase() }}</small>
+          <small class="hand-owner">{{ ownerLabel(c.ownerId) }}</small>
         </button>
       </div>
     </div>
@@ -68,7 +94,7 @@ defineEmits<{ play: [id: string]; end: []; settle: [] }>();
       <h3>
         {{
           battleState.phase === "won"
-            ? "遭遇胜利 · 火种仍在"
+            ? "遭遇胜利 · 火种仍在（倒下同伴仍需篝火救治）"
             : "旅途结束 · 余烬熄灭"
         }}
       </h3>

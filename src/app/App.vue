@@ -5,6 +5,7 @@ import { BattlePanel, battleState } from "@/features/battle";
 import { RewardPanel } from "@/features/reward";
 import { ShopPanel } from "@/features/shop";
 import { DeckPanel, deckState } from "@/features/deck";
+import { RecruitPanel, partyState } from "@/features/party";
 import { regionNames } from "@/shared/domain";
 import { session, switchTab } from "./session";
 import { load } from "./persistence";
@@ -16,6 +17,7 @@ const tabs = [
   ["reward", "奖励", "03"],
   ["shop", "商店", "04"],
   ["deck", "牌组", "05"],
+  ["recruit", "同伴", "06"],
 ];
 const progress = computed(() => (routeState.visited.length / 9) * 100);
 </script>
@@ -65,7 +67,7 @@ const progress = computed(() => (routeState.visited.length / 9) * 100);
         </div>
         <div class="resources">
           <div>
-            <small>生命</small
+            <small>旅人生命</small
             ><b
               >{{ deckState.hero.hp }}<em>/ {{ deckState.hero.maxHp }}</em></b
             >
@@ -74,7 +76,10 @@ const progress = computed(() => (routeState.visited.length / 9) * 100);
             <small>金币</small><b class="gold">{{ deckState.hero.gold }}</b>
           </div>
           <div>
-            <small>牌组</small><b>{{ deckState.cards.length }}</b>
+            <small>牌组 / 同伴</small
+            ><b
+              >{{ deckState.cards.length }} / {{ partyState.roster.length }}</b
+            >
           </div>
         </div>
       </header>
@@ -97,11 +102,16 @@ const progress = computed(() => (routeState.visited.length / 9) * 100);
           /><RewardPanel
             v-else-if="session.tab === 'reward'"
             @claim="commands.claim"
+            @growth="commands.takeGrowth"
           /><ShopPanel
             v-else-if="session.tab === 'shop'"
             :gold="deckState.hero.gold"
             @buy="commands.buy"
             @leave="commands.leaveShop"
+          /><RecruitPanel
+            v-else-if="session.tab === 'recruit'"
+            @accept="commands.acceptRecruit"
+            @decline="commands.declineRecruit"
           /><DeckPanel
             v-else
             :camp="session.context?.kind === 'camp' && !routeState.resolved"
@@ -109,6 +119,10 @@ const progress = computed(() => (routeState.visited.length / 9) * 100);
             @upgrade="commands.upgrade"
             @remove="commands.remove"
             @camp="commands.camp"
+            @rescue="commands.rescue"
+            @dismiss="commands.leaveParty"
+            @growth="commands.takeGrowth"
+            @supply="commands.takeSupply"
           />
         </div>
         <aside class="right-rail">

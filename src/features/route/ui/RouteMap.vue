@@ -9,7 +9,14 @@ const layers = computed(() =>
     routeState.nodes.filter((n) => n.depth === d),
   ),
 );
-const symbols = { battle: "⚔", elite: "♜", shop: "⚖", camp: "♨", boss: "◈" };
+const symbols = {
+  battle: "⚔",
+  elite: "♜",
+  shop: "⚖",
+  camp: "♨",
+  boss: "◈",
+  recruit: "✋",
+};
 </script>
 <template>
   <section class="panel route-panel">

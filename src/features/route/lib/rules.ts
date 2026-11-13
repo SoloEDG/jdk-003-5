@@ -16,6 +16,7 @@ export function contextFor(
     depth: node.depth,
     kind: node.kind,
     influence: accumulate(influence, node.influence),
+    companionId: node.companionId,
   };
 }
 export function available(

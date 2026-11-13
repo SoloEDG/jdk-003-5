@@ -2,6 +2,7 @@
 import { shopState, itemPrice } from "../model/state";
 import { quoteMessage } from "../lib/pricing";
 import { cards } from "@/shared/cards";
+import { supplySpecs, companionName } from "@/features/party";
 defineProps<{ gold: number }>();
 defineEmits<{ buy: [id: string]; leave: [] }>();
 </script>
@@ -19,16 +20,30 @@ defineEmits<{ buy: [id: string]; leave: [] }>();
             shopState.context!.influence.scarcity,
           )
         }}
+        · 同伴补给购买后进入待领取行囊，离队按原价退款。
       </p>
       <div class="stock">
-        <div v-for="item in shopState.stock" :key="item.id">
+        <div v-for="item in shopState.stock" :key="item.id" :data-stock="item.id">
           <div>
-            <b>{{ cards[item.card]?.name }}</b
-            ><small>{{ cards[item.card]?.text }}</small>
+            <template v-if="item.kind === 'card'">
+              <b>{{ cards[item.card!]?.name }}</b>
+              <small>{{ cards[item.card!]?.text }}</small>
+              <em v-if="item.companionId" class="owner-badge"
+                >专属 · {{ companionName(item.companionId) }}</em
+              >
+            </template>
+            <template v-else>
+              <b
+                >{{ supplySpecs[item.supply!].name }}
+                <em class="owner-badge"
+                  >· {{ companionName(item.companionId!) }}</em
+                ></b
+              >
+              <small>{{ supplySpecs[item.supply!].description }}</small>
+            </template>
           </div>
           <button
             :disabled="item.sold || gold < itemPrice(item.id)"
-            :data-stock="item.id"
             @click="$emit('buy', item.id)"
           >
             {{ item.sold ? "已售出" : itemPrice(item.id) + " 金 · 购买" }}

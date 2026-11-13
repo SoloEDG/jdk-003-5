@@ -387,6 +387,36 @@ h2 {
   align-items: center;
   padding: 24px 0;
 }
+.party-side {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  justify-content: center;
+  flex: 1;
+}
+.party-side .actor {
+  width: 44%;
+  min-width: 150px;
+}
+.actor.targeted {
+  outline: 1px solid #d4a15a;
+  border-radius: 6px;
+  box-shadow: 0 0 16px #d4a15a33;
+}
+.actor.downed {
+  opacity: 0.45;
+  filter: grayscale(0.7);
+}
+.down-tag {
+  font-style: normal;
+  font-size: 9px;
+  color: #cf7a6a;
+  border: 1px solid #7a4a42;
+  border-radius: 3px;
+  padding: 1px 5px;
+  margin-left: 6px;
+  letter-spacing: 1px;
+}
 .actor {
   text-align: center;
   width: 38%;
@@ -650,6 +680,198 @@ footer {
 }
 footer span {
   letter-spacing: 1px;
+}
+/* —— 同伴系统 —— */
+.owner-badge {
+  display: inline-block;
+  font-style: normal;
+  font-size: 8px;
+  letter-spacing: 1px;
+  color: #d6c98f;
+  border: 1px solid #6a6440;
+  border-radius: 3px;
+  padding: 1px 6px;
+  margin-top: 6px;
+  background: #2a2a1c;
+}
+.hand-owner {
+  display: block;
+  margin-top: 6px;
+  color: #d6c98f !important;
+}
+.party-roster {
+  border: 1px solid #3a4633;
+  border-radius: 6px;
+  padding: 18px;
+  margin-bottom: 22px;
+  background: #1d2519;
+}
+.party-roster h3 {
+  font-size: 15px;
+  margin: 10px 0 14px;
+}
+.party-roster h4 {
+  font-size: 12px;
+  margin: 18px 0 10px;
+  color: #c9d3a0;
+}
+.empty-mini.compact {
+  padding: 28px 16px;
+  margin-top: 10px;
+}
+.mate {
+  border: 1px solid #3d4c32;
+  border-radius: 5px;
+  padding: 14px;
+  margin-bottom: 10px;
+  background: #222c1c;
+}
+.mate.downed {
+  border-color: #7a4a42;
+  background: #2c211d;
+}
+.mate-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.mate-head strong {
+  font-size: 14px;
+  color: #d6dfa9;
+}
+.mate-head small {
+  display: block;
+  font-size: 10px;
+  color: #93a183;
+  margin-top: 4px;
+}
+.recruit-sigil {
+  font-size: 28px;
+  color: #ccdaa0;
+}
+.mate-hp {
+  font-size: 11px;
+  color: #acb89d;
+  margin: 6px 0 0;
+}
+.mate-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+  align-items: center;
+}
+.mate-actions button {
+  font-size: 11px;
+  padding: 8px 12px;
+}
+.mate-actions .ghost {
+  background: transparent;
+  border-color: #5a5340;
+  color: #c9a98f;
+}
+.warn {
+  font-size: 10px;
+  color: #cf937a;
+}
+.pending-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  border: 1px dashed #46543a;
+  border-radius: 4px;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+  font-size: 11px;
+}
+.pending-row small {
+  display: block;
+  color: #8a9878;
+  margin-top: 4px;
+}
+.pending-row button {
+  font-size: 11px;
+  padding: 8px 14px;
+  flex-shrink: 0;
+}
+.dismissed p {
+  font-size: 10px;
+  color: #717e64;
+  margin: 4px 0;
+}
+.recruit-card {
+  border: 1px solid #4c5c3a;
+  border-radius: 6px;
+  padding: 22px;
+  background: radial-gradient(ellipse at top, #33412a55, #20281d);
+}
+.recruit-head {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.recruit-head .recruit-sigil {
+  font-size: 46px;
+}
+.recruit-head h3 {
+  margin: 0;
+  font-size: 18px;
+}
+.recruit-head small {
+  color: #93a183;
+}
+.recruit-cards {
+  display: flex;
+  gap: 12px;
+  margin: 12px 0 20px;
+  flex-wrap: wrap;
+}
+.mini-card {
+  flex: 1;
+  min-width: 150px;
+  border: 1px solid #3d4c32;
+  border-radius: 5px;
+  padding: 14px;
+  background: #222c1c;
+}
+.mini-card b {
+  font-size: 13px;
+  color: #d6dfa9;
+}
+.mini-card small {
+  display: block;
+  font-size: 10px;
+  color: #91a47b;
+  line-height: 1.7;
+  margin-top: 8px;
+}
+.growth-block {
+  margin-top: 28px;
+  border-top: 1px solid #35422e;
+  padding-top: 18px;
+}
+.growth-block h3 {
+  font-size: 15px;
+}
+.growth-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #46543a;
+  border-radius: 5px;
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  background: #222c1c;
+}
+.growth-row small {
+  display: block;
+  font-size: 10px;
+  color: #91a47b;
+  margin-top: 6px;
+}
+.growth-row button {
+  font-size: 11px;
+  flex-shrink: 0;
 }
 @media (max-width: 1100px) {
   main {
